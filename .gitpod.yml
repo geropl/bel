@@ -1,6 +1,3 @@
-tasks:
-- init: cd /workspace/bel &&
-    go get -v &&
-    go test -v ./...
-  command: cd /workspace/bel && go run examples/*
-checkoutLocation: bel
+vscode:
+  extensions:
+    - test.txt@0.0.1:MTfibSKhbAyhmAQHAc6tGQ==

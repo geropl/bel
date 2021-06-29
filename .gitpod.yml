@@ -1,3 +1,11 @@
-vscode:
-  extensions:
-    - test.txt@0.0.1:MTfibSKhbAyhmAQHAc6tGQ==
+image: gitpod/workspace-full
+
+tasks:
+  - name: Foo
+    init: |
+      npm install vscode
+      echo "Foobar"
+
+github:
+  prebuilds:
+    master: true

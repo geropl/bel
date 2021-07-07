@@ -4,7 +4,7 @@ tasks:
   - name: Foo
     init: |
       npm install vscode
-      echo "Foobar"
+      echo "Foobar 123"
 
 github:
   prebuilds:

@@ -9,3 +9,4 @@ tasks:
 github:
   prebuilds:
     master: true
+    branches: true

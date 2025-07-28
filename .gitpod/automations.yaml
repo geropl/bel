@@ -1,0 +1,56 @@
+tasks:
+  install-dependencies:
+    name: Install Go Dependencies
+    description: Download Go module dependencies
+    command: |
+      echo "📦 Installing Go dependencies..."
+      go mod download
+      echo "✅ Go dependencies installed successfully"
+    triggeredBy:
+      - postDevcontainerStart
+
+  setup-vscode:
+    name: Setup VSCode Extension
+    description: Install VSCode extension package (migrated from .gitpod.yml)
+    command: |
+      echo "🔧 Installing VSCode extension..."
+      npm install vscode
+      echo "Foobar 🎉"
+      echo "✅ VSCode setup completed"
+    triggeredBy:
+      - postDevcontainerStart
+    dependsOn:
+      - install-dependencies
+
+  test:
+    name: Run Tests
+    description: Execute Go test suite
+    command: |
+      echo "🧪 Running Go tests..."
+      go test ./...
+      echo "✅ Tests completed"
+    triggeredBy:
+      - manual
+
+  run-example:
+    name: Run Example
+    description: Execute a specific example
+    command: |
+      echo "🚀 Running example..."
+      echo "Available examples:"
+      go run examples/main.go
+      echo ""
+      echo "To run a specific example, use: go run examples/main.go <example-name>"
+      echo "Examples: embed-structs, custom-namer, enums, follow-structs, etc."
+    triggeredBy:
+      - manual
+
+  build:
+    name: Build Library
+    description: Build the Go library
+    command: |
+      echo "🔨 Building Go library..."
+      go build ./...
+      echo "✅ Build completed successfully"
+    triggeredBy:
+      - manual

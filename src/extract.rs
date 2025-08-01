@@ -202,6 +202,24 @@ impl Extractor {
                 let path = &type_path.path;
                 if let Some(segment) = path.segments.last() {
                     let type_name = segment.ident.to_string();
+                    
+                    // Handle generic types like Option<T>, Vec<T>
+                    if !segment.arguments.is_empty() {
+                        if let syn::PathArguments::AngleBracketed(args) = &segment.arguments {
+                            if type_name == "Option" && args.args.len() == 1 {
+                                if let syn::GenericArgument::Type(inner_ty) = &args.args[0] {
+                                    let inner_type = self.convert_type(inner_ty)?;
+                                    return Ok(inner_type);
+                                }
+                            } else if type_name == "Vec" && args.args.len() == 1 {
+                                if let syn::GenericArgument::Type(inner_ty) = &args.args[0] {
+                                    let inner_type = self.convert_type(inner_ty)?;
+                                    return Ok(format!("{}[]", inner_type));
+                                }
+                            }
+                        }
+                    }
+                    
                     Ok(self.rust_to_typescript_type(&type_name))
                 } else {
                     Ok("any".to_string())
@@ -242,8 +260,27 @@ impl Extractor {
         result
     }
 
-    fn is_optional_field(&self, _field: &Field) -> bool {
-        // TODO: Check for Option<T> types and serde attributes
+    fn is_optional_field(&self, field: &Field) -> bool {
+        // Check if field type is Option<T>
+        if let Type::Path(type_path) = &field.ty {
+            if let Some(segment) = type_path.path.segments.last() {
+                if segment.ident == "Option" {
+                    return true;
+                }
+            }
+        }
+        
+        // Check for serde skip_serializing_if attribute
+        for attr in &field.attrs {
+            if attr.path().is_ident("serde") {
+                // This is a simplified check - in practice you'd parse the serde attributes more thoroughly
+                let attr_str = format!("{:?}", attr);
+                if attr_str.contains("skip_serializing_if") {
+                    return true;
+                }
+            }
+        }
+
         false
     }
 

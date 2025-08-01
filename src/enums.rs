@@ -1,6 +1,5 @@
 //! Enum handling and extraction utilities
 
-use std::collections::HashMap;
 use syn::{ItemEnum, Variant, Expr, Lit};
 
 /// Enum value representation
